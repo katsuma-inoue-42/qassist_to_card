@@ -6,4 +6,4 @@ Ankiでの使用を想定し、デッキをロードするためのCSVファイ�
 
 以下のリンクからアクセス下さい。
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](http://colab.research.google.com/github/katsuma-inoue-42/qassist_to_card/blob/master/qassis_to_card.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](http://colab.research.google.com/github/katsuma-inoue-42/qassist_to_card/blob/master/qassist_to_card.ipynb)

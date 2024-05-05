@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "qassist_to_card"
+version = "0.1.0"
+description = ""
+authors = ["Katsuma Inoue <katsuma.inoue.42@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pymupdf = "^1.24.2"
+ipykernel = "^6.29.4"
+ipywidgets = "^8.1.2"
+pandas = "^2.2.2"
+tqdm = "^4.66.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

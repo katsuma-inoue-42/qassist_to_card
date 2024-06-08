@@ -2,3 +2,4 @@ data
 development
 output
 .vscode
+__pycache__

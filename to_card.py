@@ -206,7 +206,7 @@ def run_all(
     doc_blk = fitz.open(blank_file)
     doc_fld = fitz.open(filled_file)
     print(f'Info: ファイルの読み込み成功（{blank_file} & {filled_file}）')
-    assert len(doc_blk) == len(doc_blk), 'Error: ページ数が一致しません！ファイルを確認してください'
+    assert len(doc_blk) == len(doc_fld), 'Error: ページ数が一致しません！ファイルを確認してください'
 
     problems = []
     last_problem = None

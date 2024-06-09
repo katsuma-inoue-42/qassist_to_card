@@ -3,3 +3,4 @@ development
 output
 .vscode
 __pycache__
+*.pyc

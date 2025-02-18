@@ -1,11 +1,10 @@
-
 import os
 import re
-import fitz
 import unicodedata
-import pandas as pd
 
-from tqdm.notebook import trange, tqdm
+import fitz
+import pandas as pd
+from tqdm.notebook import tqdm, trange
 
 
 def concat_lines(lines):
@@ -30,10 +29,16 @@ def extract_title(doc):
 
 
 def extract_bbox(
-        doc, page_number, last_problem=None, lecture_name='',
-        header_threshold=40, footer_threshold=750,
-        left_indent_threshold=44, side_note_threshold=395,
-        verbose=False):
+    doc,
+    page_number,
+    last_problem=None,
+    lecture_name='',
+    header_threshold=40,
+    footer_threshold=750,
+    left_indent_threshold=44,
+    side_note_threshold=395,
+    verbose=False,
+):
     problems = []
     page = doc[page_number - 1]
     texts = page.get_text('dict')
@@ -69,10 +74,12 @@ def extract_bbox(
         if bbox[0] >= left_indent_threshold:
             drawings.append(dict(bbox=bbox, text=''))
     elements = list(blocks) + list(images) + list(drawings)
-    elements = filter(lambda v: v['bbox'][0] <= side_note_threshold, elements)  # remove side notes (x0)
+    elements = filter(
+        lambda v: v['bbox'][0] <= side_note_threshold, elements
+    )  # remove side notes (x0)
     elements = filter(lambda v: v['bbox'][1] <= footer_threshold, elements)  # remove footer (y0)
     elements = sorted(elements, key=lambda v: v['bbox'][1])  # sorted (y0)
-    for idx, element in enumerate(elements):
+    for _idx, element in enumerate(elements):
         bbox = element['bbox']
         text = element['text']
         x0, y0, x1, y1 = bbox
@@ -88,7 +95,7 @@ def extract_bbox(
             is_main_text = False
         elif x0 < left_indent_threshold:
             # extract info from the main text
-            if (match := re.match(r'^(\d+|[０-９]+)\.(.+)$', text)):
+            if match := re.match(r'^(\d+|[０-９]+)\.(.+)$', text):
                 # extract sections (e.g., 1. ...)
                 section_id = int(match[1])
                 section_name = match[2]
@@ -96,7 +103,7 @@ def extract_bbox(
                 problem_id = 0
                 is_new_section = True
                 is_main_text = False
-            elif (match := re.match(r'^【(.+)】', text)):
+            elif match := re.match(r'^【(.+)】', text):
                 # extract subsections (e.g., 【...】)
                 subsection_name = match[1]
                 is_new_section = False
@@ -107,28 +114,46 @@ def extract_bbox(
                 is_new_section = True
                 is_main_text = True
         if is_new_section:
-            problems.append(dict(
-                bboxes=[], page_number=page_number,
-                lecture_id=lecture_id, lecture_name=lecture_name,
-                chapter_id=chapter_id, chapter_name=chapter_name,
-                section_id=section_id, section_name=section_name,
-                subsection_name=subsection_name, problem_id=problem_id, text_length=0))
+            problems.append(
+                dict(
+                    bboxes=[],
+                    page_number=page_number,
+                    lecture_id=lecture_id,
+                    lecture_name=lecture_name,
+                    chapter_id=chapter_id,
+                    chapter_name=chapter_name,
+                    section_id=section_id,
+                    section_name=section_name,
+                    subsection_name=subsection_name,
+                    problem_id=problem_id,
+                    text_length=0,
+                )
+            )
         if is_main_text and len(problems) > 0:
             problems[-1]['bboxes'].append(bbox)
             problems[-1]['text_length'] += len(text)
         if verbose:
             bbox_str = ','.join(map('{:3.0f}'.format, bbox))
-            print('{} p.{:<3} {:>2} {:>2} ({:>3},{:>3},{:>3}): {}'.format(
-                bbox_str, page_number, is_main_text, lecture_id,
-                chapter_id, section_id, problem_id, text))
+            print(
+                '{} p.{:<3} {:>2} {:>2} ({:>3},{:>3},{:>3}): {}'.format(
+                    bbox_str,
+                    page_number,
+                    is_main_text,
+                    lecture_id,
+                    chapter_id,
+                    section_id,
+                    problem_id,
+                    text,
+                )
+            )
     problems = filter(lambda v: len(v['bboxes']) > 0, problems)
     problems = filter(lambda v: v['text_length'] > 0, problems)
     problems = list(problems)
     y0_acc = [problem['bboxes'][0][1] for problem in problems]
     y0_acc.append(footer_threshold)
-    for problem_id, (y0, y1) in enumerate(zip(y0_acc[:-1], y0_acc[1:])):
+    for problem_id, (y0, y1) in enumerate(zip(y0_acc[:-1], y0_acc[1:], strict=False)):
         tables = page.find_tables(clip=(0, y0, int(page_w), y1))
-        for idx, table in enumerate(tables.tables):
+        for _idx, table in enumerate(tables.tables):
             if table.bbox[0] <= side_note_threshold and table.bbox[1] <= footer_threshold:
                 problems[problem_id]['bboxes'].append(table.bbox)
     for problem in problems:
@@ -139,15 +164,12 @@ def extract_bbox(
         y1 = max(map(lambda t: t[3], bboxes))
         problem['bbox'] = (x0, y0, x1, y1)
         problem['within_main_view'] = (
-            y0 >= header_threshold) and (
-                y1 <= footer_threshold) and (
-                    x1 <= side_note_threshold)
+            (y0 >= header_threshold) and (y1 <= footer_threshold) and (x1 <= side_note_threshold)
+        )
     return problems
 
 
-def render_problems(
-        problems, doc_dict, save_dir,
-        dpi=200, add_prefix=True, dry_run=False):
+def render_problems(problems, doc_dict, save_dir, dpi=200, add_prefix=True, dry_run=False):
     pbar = tqdm(problems)
     for idx, problem in enumerate(pbar):
         pbar.set_description('画像出力中')
@@ -164,7 +186,8 @@ def render_problems(
                     src_pix = page.get_pixmap(clip=bbox, dpi=dpi)
                     tar_pix.copy(src_pix, src_pix.irect)
             file_name = '{:02d}_{:02d}_{:02d}_{}'.format(
-                chapter_id, section_id, problem_id, doc_type_name)
+                chapter_id, section_id, problem_id, doc_type_name
+            )
             if add_prefix:
                 file_name = '{:04d}_{}'.format(idx + 1, file_name)
             file_name = f'{lecture_id}_{file_name}'
@@ -187,22 +210,60 @@ def create_accumulated_csv(problems, delimiter=' '):
         chapter_id, chapter_name = '{:02d}'.format(problem['chapter_id']), problem['chapter_name']
         section_id, section_name = '{:d}'.format(problem['section_id']), problem['section_name']
         subsection_name = problem['subsection_name']
-        rows.append([
-            blank_name, filled_name, lecture_name, page_number, lecture_id,
-            chapter_id, chapter_name, section_id, section_name, subsection_name])
-    df = pd.DataFrame(rows, columns=[
-        'blank', 'filled', 'lecture_name', 'page_number', 'lecture_id',
-        'chapter_id', 'chapter_name', 'section_id', 'section_name', 'subsection_name'])
+        rows.append(
+            [
+                blank_name,
+                filled_name,
+                lecture_name,
+                page_number,
+                lecture_id,
+                chapter_id,
+                chapter_name,
+                section_id,
+                section_name,
+                subsection_name,
+            ]
+        )
+    df = pd.DataFrame(
+        rows,
+        columns=[
+            'blank',
+            'filled',
+            'lecture_name',
+            'page_number',
+            'lecture_id',
+            'chapter_id',
+            'chapter_name',
+            'section_id',
+            'section_name',
+            'subsection_name',
+        ],
+    )
     return df
 
 
 def run_all(
-        blank_file, filled_file, output_folder, dpi=200,
-        kw_extract_box=dict(
-            header_threshold=40, footer_threshold=750,
-            left_indent_threshold=44, side_note_threshold=395, verbose=False),
-        kw_render_problems=dict(
-            add_prefix=True, dry_run=False),):
+    blank_file,
+    filled_file,
+    output_folder,
+    dpi=200,
+    kw_extract_box=None,
+    kw_render_problems=None,
+):
+    kw_extract_box = (
+        dict(
+            header_threshold=40,
+            footer_threshold=750,
+            left_indent_threshold=44,
+            side_note_threshold=395,
+            verbose=False,
+        )
+        if kw_extract_box is None
+        else kw_extract_box
+    )
+    kw_render_problems = (
+        dict(add_prefix=True, dry_run=False) if kw_render_problems is None else kw_render_problems
+    )
     doc_blk = fitz.open(blank_file)
     doc_fld = fitz.open(filled_file)
     print(f'Info: ファイルの読み込み成功（{blank_file} & {filled_file}）')
@@ -215,17 +276,23 @@ def run_all(
     for page_number in pbar:
         pbar.set_description('問題抽出中')
         out = extract_bbox(
-            doc_fld, page_number,
+            doc_fld,
+            page_number,
             last_problem=last_problem,
             lecture_name=lecture_name,
-            **kw_extract_box)
+            **kw_extract_box,
+        )
         problems += out
         if len(problems) > 0:
             last_problem = problems[-1]
 
     render_problems(
-        problems, dict(filled=doc_fld, blank=doc_blk),
-        f'{output_folder}/png', dpi=dpi, **kw_render_problems)
+        problems,
+        dict(filled=doc_fld, blank=doc_blk),
+        f'{output_folder}/png',
+        dpi=dpi,
+        **kw_render_problems,
+    )
 
     df = create_accumulated_csv(problems)
     path = f'{output_folder}/info.csv'

@@ -5,5 +5,6 @@ Ankiでの使用を想定し、デッキをロードするためのCSVファイ�
 家庭内で依頼されて作成したものを、個人学習の効率化の目的の下、MITライセンスで一般公開しています。
 
 以下のリンクからアクセス下さい（規約ならびに詳細な使い方は全てこの中に記載されています）。
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](http://colab.research.google.com/github/katsuma-inoue-42/qassist_to_card/blob/master/qassist_to_card.ipynb)
+<a target="_blank" href="https://colab.research.google.com/github/katsuma-inoue-42/qassist_to_card">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>

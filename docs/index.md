@@ -11,5 +11,5 @@
 - 一単元あたりおよそ数十秒〜数分でデッキを生成可能でき、Zipファイルの形でまとめてダウンロードできます。
 - 単元名や章・節、ページ数などの情報も抽出されCSVファイルに保存されるため、テンプレートを調整してデッキのデザインを自由に調整できます（下記画像を実現するテンプレートの例も[リンク](http://colab.research.google.com/github/katsuma-inoue-42/qassist_to_card/blob/master/qassist_to_card.ipynb)先に記載されています）。
 
-![blank](https://github.com/katsuma-inoue-42/qassist_to_card/blob/master/docs/assets/blank.png)
-![answer](https://github.com/katsuma-inoue-42/qassist_to_card/blob/master/docs/assets/answer.png)
+![blank](https://raw.githubusercontent.com/katsuma-inoue-42/qassist_to_card/refs/heads/master/docs/assets/blank.png)
+![answer](https://raw.githubusercontent.com/katsuma-inoue-42/qassist_to_card/refs/heads/master/docs/assets/answer.png)

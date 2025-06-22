@@ -5,12 +5,13 @@ description: Q-Assistのサブプリントから問題を抽出してAnkiデッ�
 lang: ja_JP
 ---
 
-# [Q-Assist™ subprint to card](https://github.com/katsuma-inoue-42/qassist_to_card)
+# Q-Assist™ subprint to card
 
-[Q-Assist™](https://medilink-study.com/)は、サブプリントを自動的に分割してデッキ化するPythonソフトウェアです。
-[Anki](https://apps.ankiweb.net/)の使用を想定し、画像のみならずデッキを読み込むためのCSVファイル（表ファイル）も同時に生成します。
-家庭内で依頼されて作成したもので、個人学習の効率化を目的としてMITライセンス（オープンソース）で一般公開しています。
-[リンク](http://colab.research.google.com/github/katsuma-inoue-42/qassist_to_card/blob/master/qassist_to_card.ipynb)にアクセスして、ブラウザ上で操作してください（規約および詳細な使い方はすべてこの中に記載されています）。
+**qassist_to_card**は、[Q-Assist™](https://medilink-study.com/)のサブプリントを自動的に分割してデッキ化するPythonソフトウェアです。
+[Anki](https://apps.ankiweb.net/)の使用を想定し、カード両面用の画像のみならず、デッキを読み込むためのCSVファイル（表ファイル）も同時に生成します。
+元々家庭内で依頼されて作成したもので、個人学習の効率化を目的としてMITライセンス（オープンソース）で一般公開しています。
+
+[このColabリンク](http://colab.research.google.com/github/katsuma-inoue-42/qassist_to_card/blob/master/qassist_to_card.ipynb)にアクセスして、ブラウザ上で操作して使用してください（規約および詳細な使い方はすべてこの中に記載されています）。
 
 ## 主な機能・特徴
 - 穴埋め&解答PDFから自動的に穴埋め箇所を抽出し、Ankiデッキ用の画像と対応するCSVファイルを作成します。
@@ -19,10 +20,10 @@ lang: ja_JP
 - 一単元あたりおよそ数十秒〜数分でデッキを生成でき、Zipファイルの形でまとめてダウンロードできます。
 - 単元名や章・節、ページ数などの情報も抽出されCSVファイルに保存されるため、テンプレートを調整してデッキのデザインを自由に変更できます（下記画像参照。この例を実現するテンプレートのサンプルも[リンク先](http://colab.research.google.com/github/katsuma-inoue-42/qassist_to_card/blob/master/qassist_to_card.ipynb)の末尾に記載されています）。
 
-**Ankiの穴埋め例:**
+**Ankiの表面（穴埋め）例:**
 ![blank](https://raw.githubusercontent.com/katsuma-inoue-42/qassist_to_card/refs/heads/master/docs/assets/blank.png)
 
-**Ankiの解答例:**
+**Ankiの裏面（解答）例:**
 ![answer](https://raw.githubusercontent.com/katsuma-inoue-42/qassist_to_card/refs/heads/master/docs/assets/answer.png)
 
 ## 連絡先

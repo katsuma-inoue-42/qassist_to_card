@@ -1,6 +1,6 @@
-# [Q-Assist subprint to card](https://github.com/katsuma-inoue-42/qassist_to_card)
+# [Q-Assist™ subprint to card](https://github.com/katsuma-inoue-42/qassist_to_card)
 
-Q-Assistのサブプリントを分割してデッキ化するソフトウェアです。
+[Q-Assist™](https://medilink-study.com/)のサブプリントを自動的に分割してデッキ化するPythonソフトウェアです。
 [Anki](https://apps.ankiweb.net/)での使用を想定し、デッキをロードするためのCSVファイル (表ファイル)も同時に生成します。
 家庭内で依頼されて作成したものを、個人学習の効率化の目的の下、MITライセンスで一般公開しています。
 

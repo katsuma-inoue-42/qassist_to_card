@@ -1,5 +1,4 @@
 theme: jekyll-theme-minimal
-title: qassist_to_card
-description: Q-Assistのサブプリントを自動的に分割してデッキ化するソフトウェア
 plugins:
   - jekyll-sitemap
+  - jekyll-seo-tag
